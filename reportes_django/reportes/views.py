@@ -72,10 +72,13 @@ class VentaPDFView(generics.GenericAPIView):
           pdf.write()
           pdf.save("pdf-prueba.pdf", pretty=True)
 
-          path = "pdf-prueba.pdf"
-          mime = mimetypes.guess_type(path)
-          response = HttpResponse(content_type=mime)
-          response['Content-Disposition'] = 'attachment; filename="pdf-prueba.pdf"'
+          BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+          filename = 'pdf-prueba.pdf'
+          filepath = BASE_DIR + '/' + filename
+          path = open(filepath, 'r')
+          mime_type, _ = mimetypes.guess_type(filepath)
+          response = HttpResponse(path, content_type=mime_type)
+          response['Content-Disposition'] = "attachment; filename=%s" % filename
           return response
         
         except Exception as e:
